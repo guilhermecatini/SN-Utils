@@ -3,7 +3,7 @@ document.querySelectorAll("td.left[onclick]").forEach(td => {
     let lnk = document.createElement('a');
     let linkText = document.createTextNode(" [SN Utils Compare]");
     lnk.appendChild(linkText);
-    lnk.href = "#";
+    lnk.href = "javascript:void(0)";
     lnk.style = 'font-size:7pt; display:block'
     lnk.addEventListener('click', evt => {
         openMonaceDiff(field);
@@ -34,7 +34,7 @@ function setupForNonEditableFields(leftElementId, rightElementId, field, td) {
     let lnk = document.createElement('a');
     let linkText = document.createTextNode(" [SN Utils Compare]");
     lnk.appendChild(linkText);
-    lnk.href = "#";
+    lnk.href = "javascript:void(0)";
     lnk.style = 'font-size:7pt; display:block'
     lnk.addEventListener('click', evt => {
         openMonaceDiff(field, {

@@ -4501,19 +4501,24 @@ function snuCopySelectedCellValues(copySysIDs, shortcut = "copycells") {
                 }
             }
             else {
-                var oTitle = cElem.getAttribute("data-original-title");
-                if (oTitle !== null){
-                    if (oTitle.length == 1000)
-                        str +=  cElem.innerText.replace(/"/g, '""') + ' [TRUNCATED]\n';
-                    else if (/\r|\n/.exec(oTitle)) //do not enclose in quotes if multiline #458
-                        str += '"' + oTitle.replace(/"/g, '""') + '"\n';
-                    else 
-                        str += oTitle.replace(/"/g, '""') + '\n';
+                // Try multiple sources for full value (fixes #628 - copycolumn truncated values)
+                var fullValue = cElem.getAttribute("data-original-title") 
+                    || cElem.getAttribute("title")
+                    || (cElem.querySelector('[title]') && cElem.querySelector('[title]').getAttribute('title'))
+                    || null;
+                
+                if (fullValue !== null) {
+                    if (fullValue.length == 1000)
+                        str += cElem.innerText.replace(/"/g, '""') + ' [TRUNCATED]\n';
+                    else if (/\r|\n/.exec(fullValue)) //do not enclose in quotes if multiline #458
+                        str += '"' + fullValue.replace(/"/g, '""') + '"\n';
+                    else
+                        str += fullValue.replace(/"/g, '""') + '\n';
                 }
                 else
-                    str += cElem.innerText.replace(' ➚','') + '\n';
+                    str += cElem.innerText.replace(' ➚', '') + '\n';
             }
-                
+
         });
         if (str.endsWith(',')) str = str.substring(0, str.length - 1);
 
@@ -5594,21 +5599,23 @@ function snuAddPersonaliseListHandler() {
 
     })
 
-    //this adds the option CONTAINS to the list filter operator if it is not present on CTRL/CMD click
-     if (typeof g_list != 'undefined') {
+    //this adds filter operator options if not present on CTRL/CMD click #619
+    if (typeof g_list != 'undefined') {
         document.addEventListener('click', function (event) {
             if (event.ctrlKey || event.metaKey) {
-                if (event.target.tagName == 'SELECT' && event.target.classList.contains('filerTableSelect')){
+                if (event.target.tagName == 'SELECT' && event.target.classList.contains('filerTableSelect')) {
                     const options = event.target.options;
-                    let exists = false;
-                    for (let i = 0; i < options.length; i++) { // Check for option existence
-                      if (options[i].value === "LIKE") {
-                        exists = true;
-                        break;
-                      }
+                    let LIKEexists = false;
+                    let INexists = false;
+                    let NOTINexists = false;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value === "LIKE") LIKEexists = true;
+                        if (options[i].value === "IN") INexists = true;
+                        if (options[i].value === "NOT IN") NOTINexists = true;
                     }
-                    // Add the option if it does not exist
-                    if (!exists) event.target.add(new Option("[SN Utils] contains", "LIKE"));
+                    if (!LIKEexists) event.target.add(new Option("[SN Utils] contains", "LIKE"));
+                    if (!INexists) event.target.add(new Option("[SN Utils] is one of", "IN"));
+                    if (!NOTINexists) event.target.add(new Option("[SN Utils] is not one of", "NOT IN"));
                 }
             }
         });

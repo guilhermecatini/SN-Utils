@@ -51,7 +51,7 @@ sleep 6
 if [ "$lastpublishedversion" = "$currentversion" ]; then
     echo "Can not publish, version not updated in manifest.json: $currentversion"
 else
-    node publish/publish.mjs
+    # node publish/publish.mjs
     echo "Publishing: $currentversion"
     echo "$currentversion" > publish/lastpublishedversion.txt #write version to file
 fi

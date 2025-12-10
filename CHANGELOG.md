@@ -1,5 +1,18 @@
 # CHANGELOG.md
 
+## 9.2.0.0 (2025-12-10)
+Features:
+  - Redesigned ScriptSync Helper Tab with modern UI, dark/light theme support, and removed Bootstrap/jQuery dependencies (Preview of the refreshed UI coming in 2026)
+  - Added new ScriptSync actions for VS Code integration: takeScreenshot, uploadAttachment, switchContext (update set/app/domain), runSlashCommand, activateTab, and more. These new functions enable AI Agents to interact with ScriptSync.
+  - CTRL-click on list filter operator now also adds "is one of" (IN) and "is not one of" (NOT IN) options in addition to "contains" (LIKE) (Discussion #619)
+
+Fixes / changes:
+  - Added heads-up notice regarding upcoming licensing update for the Store App
+  - Fix Monaco formatting to preserve spaces after JS keywords (if, for, while, etc.) while removing them for function calls (Issue #605)
+  - Fix /copycolumn truncated values by checking multiple sources (data-original-title, title attributes) (Issue #628)
+  - Fix Monaco compare links to prevent page nav when clicking [SN Utils Compare] (Discussion #629)
+
+
 ## 9.1.1.2 (2025-09-11)
 Fixes / changes:
   - Removed unused test pages 
